@@ -131,8 +131,11 @@ document.addEventListener('DOMContentLoaded', () => {
         const li = e.target.closest('li');
         if (!li) return; // Si el clic no fue dentro de un <li>, salimos
 
-        const id = li.dataset.id; // Obtenemos el ID del atributo data-id
-        
+        // --- ESTO ES CLAVE ---
+        // Usamos getAttribute() para leer directamente el ID
+        const id = li.getAttribute('data-id');
+        // ---------------------
+
         if (e.target.tagName === 'LI') {
             // Lógica para marcar como completado
             const completed = !li.classList.contains('completed');

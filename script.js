@@ -81,6 +81,36 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    // Función para eliminar una tarea en el Back-End
+    async function deleteTask(id) {
+        try {
+            const response = await fetch(`${apiUrl}/${id}`, {
+                method: 'DELETE'
+            });
+            if (response.ok) {
+                loadTasks(); // Volvemos a cargar la lista para actualizar
+            }
+        } catch (error) {
+            console.error('Error al eliminar la tarea:', error);
+        }
+    }
+
+    // Función para actualizar el estado 'completado' de una tarea
+    async function updateTaskStatus(id, completed) {
+        try {
+            const response = await fetch(`${apiUrl}/${id}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ completed })
+            });
+            if (response.ok) {
+                loadTasks(); // Volvemos a cargar la lista
+            }
+        } catch (error) {
+            console.error('Error al actualizar el estado de la tarea:', error);
+        }
+    }
+
     // Eventos (ya conocidos, pero ahora con la lógica de la API)
     addButton.addEventListener('click', addTask);
 
@@ -92,10 +122,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Delegación de eventos para marcar como completado y eliminar
     taskList.addEventListener('click', (e) => {
+        const li = e.target.closest('li');
+        if (!li) return; // Salir si el clic no fue en un li
+
+        const id = li.dataset.id;
+
         if (e.target.tagName === 'LI') {
-            e.target.classList.toggle('completed');
+            // Si se hizo clic en el texto de la tarea
+            const completed = !li.classList.contains('completed');
+            updateTaskStatus(id, completed);
         } else if (e.target.tagName === 'SPAN') {
-            e.target.parentElement.remove();
+            // Si se hizo clic en el botón de eliminar
+            deleteTask(id);
         }
     });
 

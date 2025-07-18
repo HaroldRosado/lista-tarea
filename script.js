@@ -23,7 +23,7 @@ document.addEventListener('DOMContentLoaded', () => {
             li.appendChild(span);
             
             // Añadimos el ID como un atributo para futuras acciones
-            li.dataset.id = task.id;
+            li.dataset.id = task._id;
             
             taskList.appendChild(li);
         });
@@ -120,20 +120,29 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Delegación de eventos para marcar como completado y eliminar
-    taskList.addEventListener('click', (e) => {
+    // Delegación de eventos para las acciones de la tarea
+    taskList.addEventListener('click', async (e) => {
+        // Usamos .closest('li') para encontrar el elemento <li> padre
         const li = e.target.closest('li');
-        if (!li) return; // Salir si el clic no fue en un li
+        if (!li) return; // Si el clic no fue dentro de un <li>, salimos
 
-        const id = li.dataset.id;
-
+        const id = li.dataset.id; // Obtenemos el ID del atributo data-id
+        
         if (e.target.tagName === 'LI') {
-            // Si se hizo clic en el texto de la tarea
+            // Lógica para marcar como completado
             const completed = !li.classList.contains('completed');
-            updateTaskStatus(id, completed);
+            try {
+                await updateTaskStatus(id, completed);
+            } catch (error) {
+                console.error('Error al actualizar el estado:', error);
+            }
         } else if (e.target.tagName === 'SPAN') {
-            // Si se hizo clic en el botón de eliminar
-            deleteTask(id);
+            // Lógica para eliminar
+            try {
+                await deleteTask(id);
+            } catch (error) {
+                console.error('Error al eliminar la tarea:', error);
+            }
         }
     });
 

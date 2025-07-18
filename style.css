@@ -1,0 +1,128 @@
+/* Variables CSS para la paleta de colores */
+:root {
+    --color-bg-light: #f0f4f8;
+    --color-bg-secondary: #ffffff;
+    --color-text-primary: #2c3e50;
+    --color-accent: #3498db;
+    --color-shadow: rgba(0, 0, 0, 0.1);
+}
+
+body {
+    font-family: 'Roboto', sans-serif;
+    background-color: var(--color-bg-light);
+    color: var(--color-text-primary);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+}
+
+.todo-app {
+    width: 100%;
+    max-width: 540px;
+    background-color: var(--color-bg-secondary);
+    border-radius: 10px;
+    padding: 30px;
+    box-shadow: 0 4px 20px var(--color-shadow);
+}
+
+.todo-app h2 {
+    text-align: center;
+    margin-bottom: 2rem;
+    color: var(--color-accent);
+}
+
+.input-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #f0f0f0;
+    border-radius: 30px;
+    padding-left: 20px;
+    margin-bottom: 1.5rem;
+}
+
+#task-input {
+    flex: 1;
+    border: none;
+    outline: none;
+    background: transparent;
+    padding: 10px;
+    font-size: 1rem;
+}
+
+#add-button {
+    border: none;
+    padding: 15px 30px;
+    background-color: var(--color-accent);
+    color: #fff;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    border-radius: 30px;
+    transition: background-color 0.3s ease;
+}
+
+#add-button:hover {
+    background-color: #2980b9;
+}
+
+#task-list {
+    list-style: none;
+    padding: 0;
+}
+
+/* Estilo para las tareas de la lista */
+#task-list li {
+    padding: 12px 8px 12px 50px;
+    user-select: none;
+    cursor: pointer;
+    position: relative;
+}
+
+/* Pseudo-clase para el icono de "no completado" */
+#task-list li::before {
+    content: '';
+    position: absolute;
+    height: 28px;
+    width: 28px;
+    border-radius: 50%;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zM12 4c4.418 0 8 3.582 8 8s-3.582 8-8 8-8-3.582-8-8 3.582-8 8-8z' fill='%23666'/%3E%3C/svg%3E");
+    background-size: cover;
+    background-position: center;
+    top: 50%;
+    left: 8px;
+    transform: translateY(-50%);
+}
+
+/* Estilos para las tareas completadas */
+#task-list li.completed {
+    color: #555;
+    text-decoration: line-through;
+}
+
+/* Pseudo-clase para el icono de "completado" */
+#task-list li.completed::before {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zM9.5 16.5l-3.5-3.5 1.5-1.5 2 2 4.5-4.5 1.5 1.5-6 6z' fill='%2327ae60'/%3E%3C/svg%3E");
+}
+
+/* Estilos para el botón de eliminar */
+#task-list li span {
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 40px;
+    height: 40px;
+    font-size: 22px;
+    color: #555;
+    line-height: 40px;
+    text-align: center;
+    border-radius: 50%;
+    transition: background-color 0.2s;
+}
+
+#task-list li span:hover {
+    background-color: #f0f0f0;
+}

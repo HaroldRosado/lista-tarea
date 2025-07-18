@@ -4,68 +4,84 @@ document.addEventListener('DOMContentLoaded', () => {
     const addButton = document.getElementById('add-button');
     const taskList = document.getElementById('task-list');
 
-    function addTask() {
-        const taskText = taskInput.value.trim();
-        if (taskText !== '') {
+    // Función para renderizar las tareas en la interfaz
+    function renderTasks(tasks) {
+        // Limpiamos la lista actual
+        taskList.innerHTML = '';
+        tasks.forEach(task => {
             const li = document.createElement('li');
-            li.textContent = taskText;
-
+            li.textContent = task.text;
+            
+            // Si la tarea está completada, le añadimos la clase 'completed'
+            if (task.completed) {
+                li.classList.add('completed');
+            }
+            
             const span = document.createElement('span');
             span.textContent = "\u00d7";
             li.appendChild(span);
             
-            taskList.appendChild(li);
-            taskInput.value = '';
+            // Añadimos el ID como un atributo para futuras acciones
+            li.dataset.id = task.id;
             
-            // Llamar a la función para guardar los datos
-            saveData();
+            taskList.appendChild(li);
+        });
+    }
+
+    // Función para cargar las tareas desde el Back-End
+    async function loadTasks() {
+        try {
+            // Hacemos una solicitud GET a nuestra API
+            const response = await fetch('https://mi-servidor.vercel.app/');
+            const tasks = await response.json();
+            renderTasks(tasks);
+        } catch (error) {
+            console.error('Error al cargar las tareas:', error);
         }
     }
 
-    // 1. Conectar la función al evento de clic del botón
+    // Función para añadir una nueva tarea al Back-End
+    async function addTask() {
+        const taskText = taskInput.value.trim();
+        if (taskText !== '') {
+            const newTask = { text: taskText, completed: false };
+            try {
+                // Hacemos una solicitud POST a nuestra API para añadir la tarea
+                const response = await fetch('https://mi-servidor.vercel.app/', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(newTask)
+                });
+
+                if (response.ok) {
+                    // Si la solicitud fue exitosa, volvemos a cargar la lista
+                    taskInput.value = '';
+                    loadTasks();
+                }
+            } catch (error) {
+                console.error('Error al añadir la tarea:', error);
+            }
+        }
+    }
+
+    // Eventos (ya conocidos, pero ahora con la lógica de la API)
     addButton.addEventListener('click', addTask);
 
-    // 2. Permitir añadir tareas al presionar Enter
     taskInput.addEventListener('keypress', (event) => {
         if (event.key === 'Enter') {
             addTask();
         }
     });
 
-    // 3. Delegación de eventos para marcar como completado y eliminar
+    // Delegación de eventos para marcar como completado y eliminar
     taskList.addEventListener('click', (e) => {
         if (e.target.tagName === 'LI') {
             e.target.classList.toggle('completed');
-            // Llamar a la función para guardar los datos
-            saveData();
         } else if (e.target.tagName === 'SPAN') {
             e.target.parentElement.remove();
-            // Llamar a la función para guardar los datos
-            saveData();
         }
     });
 
-    // ==========================================
-    // 4. Lógica de persistencia con localStorage
-    // ==========================================
-
-    // Función para guardar los datos en el localStorage
-    function saveData() {
-        // Guardamos todo el HTML de la lista de tareas
-        localStorage.setItem("data", taskList.innerHTML);
-    }
-
-    // Función para mostrar los datos guardados
-    function showTask() {
-        // Obtenemos el HTML guardado
-        const savedData = localStorage.getItem("data");
-        if (savedData) {
-            // Si hay datos, los insertamos en la lista
-            taskList.innerHTML = savedData;
-        }
-    }
-
-    // Llamar a la función para mostrar las tareas al cargar la página
-    showTask();
-
+    // Cargamos las tareas al iniciar la página
+    loadTasks();
 });

@@ -47,7 +47,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const newTask = { text: taskText, completed: false };
             try {
                 // Hacemos una solicitud POST a nuestra API para añadir la tarea
-                const response = await fetch('https://mi-servidor.vercel.app/', {
+                const response = await fetch('https://mi-servidor.vercel.app/api/tasks', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(newTask)

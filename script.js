@@ -46,6 +46,15 @@ document.addEventListener('DOMContentLoaded', () => {
         const taskText = taskInput.value.trim();
         if (taskText !== '') {
             const newTask = { text: taskText, completed: false };
+
+            // **ACTUALIZACIÓN OPTIMISTA: Mostramos la tarea inmediatamente**
+            const tempId = Date.now(); // Creamos un ID temporal
+            const li = document.createElement('li');
+            li.textContent = newTask.text;
+            li.dataset.id = tempId;
+            taskList.appendChild(li);
+            taskInput.value = '';
+
             try {
                 // Hacemos una solicitud POST a nuestra API para añadir la tarea
                 const response = await fetch(apiUrl, {
@@ -58,8 +67,15 @@ document.addEventListener('DOMContentLoaded', () => {
                     // Si la solicitud fue exitosa, volvemos a cargar la lista
                     taskInput.value = '';
                     loadTasks();
+                } else {
+                    // Si la solicitud falla, borramos la tarea que añadimos
+                    document.querySelector(`li[data-id="${tempId}"]`).remove();
+                    console.error('Error al añadir la tarea, por favor, intente de nuevo.');
                 }
+
             } catch (error) {
+                // Si hay un error, borramos la tarea
+                document.querySelector(`li[data-id="${tempId}"]`).remove();
                 console.error('Error al añadir la tarea:', error);
             }
         }

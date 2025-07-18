@@ -3,6 +3,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const taskInput = document.getElementById('task-input');
     const addButton = document.getElementById('add-button');
     const taskList = document.getElementById('task-list');
+    const apiUrl = 'https://mi-servidor.vercel.app/api/tasks';
 
     // Función para renderizar las tareas en la interfaz
     function renderTasks(tasks) {
@@ -32,7 +33,7 @@ document.addEventListener('DOMContentLoaded', () => {
     async function loadTasks() {
         try {
             // Hacemos una solicitud GET a nuestra API
-            const response = await fetch('https://mi-servidor.vercel.app/');
+            const response = await fetch(apiUrl);
             const tasks = await response.json();
             renderTasks(tasks);
         } catch (error) {
@@ -47,7 +48,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const newTask = { text: taskText, completed: false };
             try {
                 // Hacemos una solicitud POST a nuestra API para añadir la tarea
-                const response = await fetch('https://mi-servidor.vercel.app/api/tasks', {
+                const response = await fetch(apiUrl, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(newTask)

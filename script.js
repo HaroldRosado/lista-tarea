@@ -35,6 +35,11 @@ document.addEventListener('DOMContentLoaded', () => {
             // Hacemos una solicitud GET a nuestra API
             const response = await fetch(apiUrl);
             const tasks = await response.json();
+
+             // --- AGREGA ESTA LÍNEA ---
+            console.log('Datos recibidos de la API:', tasks); 
+            // ------------------------
+
             renderTasks(tasks);
         } catch (error) {
             console.error('Error al cargar las tareas:', error);
